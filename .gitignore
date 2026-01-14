@@ -1,0 +1,17 @@
+# Repository-level ignores (project lives in `site/`)
+nano-banana-website-clone.zip
+
+# Local env files (Next.js)
+.env*
+!.env*.example
+
+# Node / Next artifacts (safety net if committed from repo root)
+site/node_modules
+site/.next
+site/out
+site/.turbo
+site/.corepack
+
+# Local dev artifacts
+site/dev.log
+site/dev.pid
