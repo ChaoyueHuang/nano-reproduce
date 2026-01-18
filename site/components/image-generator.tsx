@@ -10,6 +10,49 @@ import { Textarea } from "@/components/ui/textarea"
 import { Sparkles } from "lucide-react"
 import { Spinner } from "@/components/ui/spinner"
 
+async function downscaleImage(file: File): Promise<File> {
+  // Keep requests small to reduce serverless timeouts (Vercel) and model latency.
+  if (!file.type.startsWith("image/")) return file
+  if (file.size <= 1_500_000) return file // ~1.5MB
+
+  const img = new Image()
+  img.decoding = "async"
+
+  const url = URL.createObjectURL(file)
+  try {
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve()
+      img.onerror = () => reject(new Error("Failed to load image."))
+      img.src = url
+    })
+
+    const maxDim = 1024
+    const scale = Math.min(1, maxDim / Math.max(img.width, img.height))
+    const w = Math.max(1, Math.round(img.width * scale))
+    const h = Math.max(1, Math.round(img.height * scale))
+
+    const canvas = document.createElement("canvas")
+    canvas.width = w
+    canvas.height = h
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return file
+
+    ctx.drawImage(img, 0, 0, w, h)
+
+    const blob: Blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error("Failed to encode image."))),
+        "image/jpeg",
+        0.9,
+      )
+    })
+
+    return new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" })
+  } finally {
+    URL.revokeObjectURL(url)
+  }
+}
+
 export default function ImageGenerator() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -51,9 +94,11 @@ export default function ImageGenerator() {
     setError(null)
 
     try {
+      const imageFile = await downscaleImage(selectedFile)
+
       const form = new FormData()
       form.set("prompt", prompt.trim())
-      form.set("image", selectedFile)
+      form.set("image", imageFile)
 
       const res = await fetch("/api/generate", {
         method: "POST",

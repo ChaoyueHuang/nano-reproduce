@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 
 export const runtime = "nodejs"
+// Allow more time for image generation on platforms that honor this (e.g. Vercel Pro).
+export const maxDuration = 60
 
 type GenerateRequestBody = {
   prompt: string
@@ -103,8 +105,12 @@ export async function POST(req: Request) {
   const siteUrl = process.env.OPENROUTER_SITE_URL || "http://localhost:3000"
   const siteTitle = process.env.OPENROUTER_SITE_TITLE || "Nano Banana"
 
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 55_000)
+
   const upstream = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
+    signal: controller.signal,
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
@@ -124,7 +130,7 @@ export async function POST(req: Request) {
         },
       ],
     }),
-  })
+  }).finally(() => clearTimeout(timeout))
 
   const data = await upstream.json().catch(() => null)
   if (!upstream.ok) {
