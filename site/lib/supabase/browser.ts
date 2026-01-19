@@ -7,6 +7,6 @@ export function createClient() {
     throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY")
   }
 
-  return createBrowserClient(url, anonKey)
+  const supabaseUrl = new URL(url).origin
+  return createBrowserClient(supabaseUrl, anonKey)
 }
-

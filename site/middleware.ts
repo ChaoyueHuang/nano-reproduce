@@ -8,13 +8,15 @@ export async function middleware(request: NextRequest) {
   // If Supabase isn't configured, don't block the app.
   if (!url || !anonKey) return NextResponse.next()
 
+  const supabaseUrl = new URL(url).origin
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   })
 
-  const supabase = createServerClient(url, anonKey, {
+  const supabase = createServerClient(supabaseUrl, anonKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll()
@@ -36,4 +38,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 }
-

@@ -1,16 +1,20 @@
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 
-export function createClient() {
+export async function createClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   if (!url || !anonKey) {
     throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY")
   }
 
-  const cookieStore = cookies()
+  // Ensure URL is the project origin (e.g. https://xyz.supabase.co), not a nested path.
+  const supabaseUrl = new URL(url).origin
 
-  return createServerClient(url, anonKey, {
+  // In newer Next.js versions, `cookies()` is async.
+  const cookieStore = await cookies()
+
+  return createServerClient(supabaseUrl, anonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll()
@@ -26,4 +30,3 @@ export function createClient() {
     },
   })
 }
-

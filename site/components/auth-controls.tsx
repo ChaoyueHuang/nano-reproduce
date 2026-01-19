@@ -6,7 +6,7 @@ export default async function AuthControls() {
   let userEmail: string | null = null
 
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data } = await supabase.auth.getUser()
     userEmail = data.user?.email ?? null
   } catch {
@@ -32,4 +32,3 @@ export default async function AuthControls() {
     </div>
   )
 }
-
