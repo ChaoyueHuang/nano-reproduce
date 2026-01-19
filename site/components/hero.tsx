@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
+import AuthControls from "@/components/auth-controls"
 
-export default function Hero() {
+export default async function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border">
       {/* Banana decoration */}
@@ -22,6 +23,10 @@ export default function Hero() {
             Transform any image with simple text prompts. Experience advanced AI-powered editing with consistent
             character preservation and scene blending.
           </p>
+
+          <div className="mb-6">
+            <AuthControls />
+          </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90">
