@@ -1,6 +1,6 @@
-import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
+import AuthLoginButton from "@/components/auth-login-button"
 
 export default async function AuthControls() {
   let userEmail: string | null = null
@@ -14,11 +14,7 @@ export default async function AuthControls() {
   }
 
   if (!userEmail) {
-    return (
-      <Button asChild variant="outline" className="bg-transparent">
-        <Link href="/auth/login">Sign in with Google</Link>
-      </Button>
-    )
+    return <AuthLoginButton />
   }
 
   return (
