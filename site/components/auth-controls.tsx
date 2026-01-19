@@ -1,6 +1,5 @@
-import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
-import AuthLoginButton from "@/components/auth-login-button"
+import { createClient } from "@/lib/supabase/server"
 
 export default async function AuthControls() {
   let userEmail: string | null = null
@@ -14,7 +13,13 @@ export default async function AuthControls() {
   }
 
   if (!userEmail) {
-    return <AuthLoginButton />
+    // Use a plain <a> so it works even if client JS doesn't hydrate.
+    // Next/React interception can trigger CORS issues on OAuth redirects.
+    return (
+      <Button asChild variant="outline" className="bg-transparent">
+        <a href="/auth/login">Sign in with Google</a>
+      </Button>
+    )
   }
 
   return (
