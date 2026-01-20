@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/server"
+import AuthLoginButton from "@/components/auth-login-button"
 
 export default async function AuthControls() {
   let userEmail: string | null = null
@@ -14,11 +15,16 @@ export default async function AuthControls() {
 
   if (!userEmail) {
     return (
-      <form action="/auth/login" method="post">
-        <Button type="submit" variant="outline" className="bg-transparent">
-          Sign in with Google
-        </Button>
-      </form>
+      <div className="flex items-center justify-center">
+        <AuthLoginButton />
+        <noscript>
+          <form action="/auth/login" method="post">
+            <Button type="submit" variant="outline" className="bg-transparent">
+              Sign in with Google
+            </Button>
+          </form>
+        </noscript>
+      </div>
     )
   }
 
