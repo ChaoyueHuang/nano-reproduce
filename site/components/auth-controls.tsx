@@ -18,11 +18,9 @@ export default async function AuthControls() {
       <div className="flex items-center justify-center">
         <AuthLoginButton />
         <noscript>
-          <form action="/auth/login" method="post">
-            <Button type="submit" variant="outline" className="bg-transparent">
-              Sign in with Google
-            </Button>
-          </form>
+          <Button asChild variant="outline" className="bg-transparent">
+            <a href="/auth/login">Sign in with Google</a>
+          </Button>
         </noscript>
       </div>
     )

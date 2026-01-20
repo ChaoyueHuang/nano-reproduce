@@ -12,19 +12,10 @@ export default function AuthLoginButton() {
       variant="outline"
       className="bg-transparent"
       disabled={isLoading}
-      onClick={async () => {
-        if (isLoading) return
+      onClick={() => {
+        // Force a real document navigation (avoid Next/RSC fetch interception of redirects).
         setIsLoading(true)
-        try {
-          const res = await fetch("/auth/login-url", { method: "GET" })
-          const data = (await res.json().catch(() => null)) as any
-          if (!res.ok) throw new Error(data?.error || `Failed (${res.status})`)
-          const url = typeof data?.url === "string" ? data.url : ""
-          if (!url) throw new Error("Missing redirect URL.")
-          window.location.assign(url)
-        } catch {
-          setIsLoading(false)
-        }
+        window.location.href = "/auth/login"
       }}
     >
       {isLoading ? "Redirecting..." : "Sign in with Google"}
