@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button"
-import { createClient } from "@/lib/supabase/server"
+import { createServerComponentClient } from "@/lib/supabase/server"
 import AuthLoginButton from "@/components/auth-login-button"
 
 export default async function AuthControls() {
   let userEmail: string | null = null
 
   try {
-    const supabase = await createClient()
+    const supabase = await createServerComponentClient()
     const { data } = await supabase.auth.getUser()
     userEmail = data.user?.email ?? null
   } catch {

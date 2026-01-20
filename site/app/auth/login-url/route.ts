@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createRouteHandlerClient } from "@/lib/supabase/server"
 import { headers } from "next/headers"
 
 async function getBaseUrl() {
@@ -18,7 +18,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Missing Supabase env vars." }, { status: 500 })
   }
 
-  const supabase = await createClient()
+  const supabase = await createRouteHandlerClient()
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
@@ -32,4 +32,3 @@ export async function GET(req: Request) {
 
   return NextResponse.json({ url: data.url })
 }
-

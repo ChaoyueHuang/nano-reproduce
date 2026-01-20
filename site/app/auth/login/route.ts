@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createRouteHandlerClient } from "@/lib/supabase/server"
 import { headers } from "next/headers"
 
 async function getBaseUrl() {
@@ -23,7 +23,7 @@ async function startOAuth(req: Request) {
   }
 
   try {
-    const supabase = await createClient()
+    const supabase = await createRouteHandlerClient()
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {

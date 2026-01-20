@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createRouteHandlerClient } from "@/lib/supabase/server"
 import { headers } from "next/headers"
 
 async function getBaseUrl(reqUrl: string) {
@@ -25,14 +25,15 @@ export async function GET(req: Request) {
   }
 
   try {
-    const supabase = await createClient()
+    const supabase = await createRouteHandlerClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (error) {
-      return NextResponse.redirect(new URL(`/?auth=exchange_failed`, origin), { status: 302 })
+      const msg = encodeURIComponent(String(error.message || "exchange_failed").slice(0, 120))
+      return NextResponse.redirect(new URL(`/?auth=exchange_failed&msg=${msg}`, origin), { status: 302 })
     }
   } catch {
-    return NextResponse.redirect(new URL(`/?auth=exchange_failed`, origin), { status: 302 })
+    return NextResponse.redirect(new URL(`/?auth=exchange_failed&msg=exception`, origin), { status: 302 })
   }
 
   return NextResponse.redirect(new URL(next, origin), { status: 302 })
