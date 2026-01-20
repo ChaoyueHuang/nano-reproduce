@@ -13,12 +13,12 @@ export default async function AuthControls() {
   }
 
   if (!userEmail) {
-    // Use a plain <a> so it works even if client JS doesn't hydrate.
-    // Next/React interception can trigger CORS issues on OAuth redirects.
     return (
-      <Button asChild variant="outline" className="bg-transparent">
-        <a href="/auth/login">Sign in with Google</a>
-      </Button>
+      <form action="/auth/login" method="post">
+        <Button type="submit" variant="outline" className="bg-transparent">
+          Sign in with Google
+        </Button>
+      </form>
     )
   }
 

@@ -12,7 +12,7 @@ async function getBaseUrl() {
   return `${proto}://${normalizedHost}`
 }
 
-export async function GET(req: Request) {
+async function startOAuth(req: Request) {
   const url = new URL(req.url)
   const next = url.searchParams.get("next") || "/"
   const origin = await getBaseUrl()
@@ -39,4 +39,13 @@ export async function GET(req: Request) {
   } catch {
     return NextResponse.redirect(new URL(`/?auth=oauth_start_failed`, origin), { status: 302 })
   }
+}
+
+export async function GET(req: Request) {
+  return startOAuth(req)
+}
+
+export async function POST(req: Request) {
+  // Form submission avoids SPA/RSC fetch interception and reliably follows redirects.
+  return startOAuth(req)
 }
