@@ -14,6 +14,9 @@ export default function Footer() {
           </div>
 
           <div className="flex gap-6 text-sm">
+            <a href="/pricing" className="text-muted-foreground hover:text-primary transition-colors">
+              Pricing
+            </a>
             <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
               Privacy
             </a>

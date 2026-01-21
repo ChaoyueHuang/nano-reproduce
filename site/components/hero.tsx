@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import AuthControls from "@/components/auth-controls"
+import Link from "next/link"
 
 export default async function Hero() {
   return (
@@ -29,11 +30,11 @@ export default async function Hero() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90">
-              Start Editing
+            <Button asChild size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90">
+              <Link href="/#generator">Start Editing</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 bg-transparent">
-              View Examples
+            <Button asChild size="lg" variant="outline" className="text-lg px-8 bg-transparent">
+              <Link href="/pricing">Pricing</Link>
             </Button>
           </div>
 
